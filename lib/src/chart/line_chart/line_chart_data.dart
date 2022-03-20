@@ -843,7 +843,10 @@ class FlDotCirclePainter extends FlDotPainter {
   /// The stroke width to use for the circle
   double strokeWidth;
 
-  /// The color of the circle is determined determined by [color],
+  /// The fill gradient to use for the circle
+  Gradient? gradient;
+
+  /// The color of the circle is determined determined by [color] or [gradient] if not null,
   /// [radius] determines the radius of the circle.
   /// You can have a stroke line around the circle,
   /// by setting the thickness with [strokeWidth],
@@ -853,10 +856,12 @@ class FlDotCirclePainter extends FlDotPainter {
     double? radius,
     Color? strokeColor,
     double? strokeWidth,
+    Gradient? gradient,
   })  : color = color ?? Colors.green,
         radius = radius ?? 4.0,
         strokeColor = strokeColor ?? Colors.green.darken(),
-        strokeWidth = strokeWidth ?? 1.0;
+        strokeWidth = strokeWidth ?? 1.0,
+        gradient = gradient;
 
   /// Implementation of the parent class to draw the circle
   @override
@@ -871,11 +876,18 @@ class FlDotCirclePainter extends FlDotPainter {
             ..style = PaintingStyle.stroke);
     }
     canvas.drawCircle(
-        offsetInCanvas,
-        radius,
-        Paint()
-          ..color = color
-          ..style = PaintingStyle.fill);
+      offsetInCanvas,
+      radius,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.fill
+        ..shader = gradient != null
+            ? gradient!.createShader(Rect.fromCircle(
+                center: offsetInCanvas,
+                radius: radius,
+              ))
+            : null,
+    );
   }
 
   /// Implementation of the parent class to get the size of the circle
@@ -891,6 +903,7 @@ class FlDotCirclePainter extends FlDotPainter {
         radius,
         strokeColor,
         strokeWidth,
+        gradient,
       ];
 }
 
@@ -909,7 +922,10 @@ class FlDotSquarePainter extends FlDotPainter {
   /// The stroke width to use for the square
   double strokeWidth;
 
-  /// The color of the square is determined determined by [color],
+  /// The fill gradient to use for the square
+  Gradient? gradient;
+
+  /// The color of the square is determined determined by [color] or [gradient] if not null,
   /// [size] determines the size of the square.
   /// You can have a stroke line around the square,
   /// by setting the thickness with [strokeWidth],
@@ -919,10 +935,12 @@ class FlDotSquarePainter extends FlDotPainter {
     double? size,
     Color? strokeColor,
     double? strokeWidth,
+    Gradient? gradient,
   })  : color = color ?? Colors.green,
         size = size ?? 4.0,
         strokeColor = strokeColor ?? Colors.green.darken(),
-        strokeWidth = strokeWidth ?? 1.0;
+        strokeWidth = strokeWidth ?? 1.0,
+        gradient = gradient;
 
   /// Implementation of the parent class to draw the square
   @override
@@ -939,13 +957,20 @@ class FlDotSquarePainter extends FlDotPainter {
             ..style = PaintingStyle.stroke);
     }
     canvas.drawRect(
-        Rect.fromCircle(
-          center: offsetInCanvas,
-          radius: size / 2,
-        ),
-        Paint()
-          ..color = color
-          ..style = PaintingStyle.fill);
+      Rect.fromCircle(
+        center: offsetInCanvas,
+        radius: size / 2,
+      ),
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.fill
+        ..shader = gradient != null
+            ? gradient!.createShader(Rect.fromCircle(
+                center: offsetInCanvas,
+                radius: (size / 2) + (strokeWidth / 2),
+              ))
+            : null,
+    );
   }
 
   /// Implementation of the parent class to get the size of the square
@@ -961,6 +986,7 @@ class FlDotSquarePainter extends FlDotPainter {
         size,
         strokeColor,
         strokeWidth,
+        gradient,
       ];
 }
 

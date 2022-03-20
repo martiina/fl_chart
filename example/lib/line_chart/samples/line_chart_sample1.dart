@@ -40,6 +40,28 @@ class _LineChart extends StatelessWidget {
 
   LineTouchData get lineTouchData1 => LineTouchData(
         handleBuiltInTouches: true,
+        getTouchedSpotIndicator: (lineChartBarData, values) => values
+            .map(
+              (value) => TouchedSpotIndicatorData(
+                FlLine(color: const Color(0xFFFFD9EF).withOpacity(0.33)),
+                FlDotData(
+                  getDotPainter: (_spot, _xPercentage, _bar, _index) =>
+                      FlDotCirclePainter(
+                    strokeColor: Colors.transparent,
+                    radius: 6,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 255, 81, 0),
+                        Color.fromARGB(255, 253, 145, 44),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+            .toList(),
         touchTooltipData: LineTouchTooltipData(
           tooltipBgGradient: const LinearGradient(
             begin: Alignment.topCenter,
